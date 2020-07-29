@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Title</title>
+</head>
+<body>
+<table id="favouredpolicy">
+    <tbody>
+    <tr>
+        <td>缴纳金额（元）</td>
+        <td>奖励利率（%）</td>
+        <td>奖励金额（元）</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+<body>
+<script>
+    function login() {
+        // 异步对象
+        var xhr = new XMLHttpRequest();
+
+        // 设置属性
+        xhr.open('post', 'http://tsap4j.natappfree.cc/login/testForm', true);
+
+        // 如果想要使用post提交数据,必须添加此行
+        xhr.setRequestHeader("Content-type", "application/json");
+
+        var sendData = {userName: "44", passWord: "55"};
+        // 将数据通过send方法传递
+        xhr.send(JSON.stringify(sendData));
+
+        // 发送并接受返回值
+        xhr.onreadystatechange = function () {
+            // 这步为判断服务器是否正确响应
+            if (xhr.readyState == 4 && xhr.status == 200) {
+
+                //得到返回的结果，并且解析为json
+                var result = xhr.responseText;
+                var jsObj = JSON.parse(xhr.responseText);
+
+
+                var statusCode = jsObj.statusCode;
+                if (statusCode == 0) {
+                    alert("登录成功")
+                    alert(JSON.stringify(jsObj.data))
+                    student = jsObj.data
+                    //定义用于拼接的字符串
+                    for(i in jsObj.data) //data.data指的是数组，数组里是8个对象，i为数组的索引
+                    {
+                        var tr;
+                        tr='<td>'+jsObj.data[i].name+'</td>'+'<td>'+jsObj.data[i].phone+'</td>'+'<td>'+jsObj.data[i].place+'</td>'
+                        alert(JSON.stringify(tr))
+                        $("#favouredpolicy").append(tr);
+                    }
+                    alert(JSON.stringify(jsObj.data))
+                } else {
+                    alert(jsObj.msg)
+                    // alert("账号或者密码错误")
+                }
+            }
+        };
+    }
+</script>
+</head>
+<body>
+<div class="container">
+    <form action="#" class="login-form">
+        <tr align="center">
+            <td colspan="2">
+                <button type="submit" onclick="login()">查询历史记录</button>
+            </td>
+        </tr>
+        </table>
+    </form>
+</div>
+</body>
+</body>
+</html>

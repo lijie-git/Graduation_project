@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        table {
+            width: 500px;
+            margin: 100px auto;
+            border-collapse: collapse; /*边框合并模式*/
+            text-align: center;
+        }
+
+        td, th {
+            border: 1px solid #333;
+        }
+
+        thead tr {
+            height: 40px;
+            background-color: #cccccc;
+        }
+    </style>
+</head>
+<body>
+<table>
+    <thead>
+    <tr>
+        <th>报警姓名</th>
+        <th>手机号码</th>
+        <th>地理位置</th>
+        <th>报警时间</th>
+        <th>报警类型</th>
+        <th>删除操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+</body>
+</html>
+<script>
+    function login() {
+        // 异步对象
+        var xhr = new XMLHttpRequest();
+
+        // 设置属性
+        xhr.open('post', 'http://2iftni.natappfree.cc/getmessage/data', true);
+
+        // 如果想要使用post提交数据,必须添加此行
+        xhr.setRequestHeader("Content-type", "application/json");
+
+        var sendData = {userName: "44", passWord: "55"};
+        // 将数据通过send方法传递
+        xhr.send(JSON.stringify(sendData));
+
+        // 发送并接受返回值
+        xhr.onreadystatechange = function () {
+            // 这步为判断服务器是否正确响应
+            if (xhr.readyState == 4 && xhr.status == 200) {
+
+                //得到返回的结果，并且解析为json
+                var result = xhr.responseText;
+                var jsObj = JSON.parse(xhr.responseText);
+
+
+                var statusCode = jsObj.statusCode;
+                if (statusCode == 0) {
+                    alert("登录成功")
+                    alert(JSON.stringify(jsObj.data))
+                    var datas = jsObj.data;
+                    //2,往tbody里面创建行，有几个人（通过数组的长度）我们就创建几行
+                    var tbody = document.querySelector("tbody");
+                    for (var i = 0; i < datas.length; i++)  //外面的for循环 是 行tr
+                    {
+                        var tr = document.createElement("tr");
+                        tbody.appendChild(tr);
+                        //3,往tr每一行里面创建单元格（跟数据有关系的3个单元格），td单元格的数量取决于每个对象的属性个数 for循环遍历对象 datas[i]
+                        for (var k in datas[i])   //里面的for循环是 列
+                        {
+                            var td = document.createElement("td");  //创建单元格
+                            tr.appendChild(td);
+                            td.innerHTML = datas[i][k]; //把对象里面的属性值 datas[i][k]给td
+                        }
+                        //4，创建有删除二字的单元格
+                        var td = document.createElement("td");
+                        tr.appendChild(td);
+                        td.innerHTML = "<a href='javascript:;'>删除</a>";
+                    }
+
+                    //5,删除操作
+                    var as = document.querySelectorAll("a");
+                    for (var i = 0; i < as.length; i++) {
+                        as[i].onclick = function () {  //点击a 删除 当前a 所在的行（a链接的爸爸的爸爸）
+                            tbody.removeChild(this.parentNode.parentNode);
+                        }
+                    }
+                } else {
+                    alert(jsObj.msg)
+                    // alert("账号或者密码错误")
+                }
+            }
+        };
+    }
+</script>
+<body>
+<div class="container">
+    <form action="#" class="login-form">
+        <tr align="center">
+            <td colspan="2">
+                <button type="submit" onclick="login()">查询历史记录</button>
+            </td>
+        </tr>
+        </table>
+    </form>
+</div>
+</body>
+</body>
+</html>

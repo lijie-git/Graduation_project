@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lj.cn.mapper.MsgMapper">
+    <!--报警信息返回-->
+    <resultMap id="result_msg" type="com.lj.cn.pojo.AlarmMessage">
+        <result property="name" column="name"></result>
+        <result property="phone" column="phone"></result>
+        <result property="place" column="place"></result>
+        <result property="time" column="time"></result>
+        <result property="type" column="type"></result>
+        <result property="carnumber" column="carnumber"></result>
+    </resultMap>
+
+    <!--警察信息-->
+    <resultMap id="result_policemsg" type="com.lj.cn.pojo.PoliceInformation">
+        <result property="pname" column="pname"></result>
+        <result property="pnumber" column="pnumber"></result>
+        <result property="pphone" column="pphone"></result>
+        <result property="pwork" column="pwork"></result>
+        <result property="pplace" column="pplace"></result>
+        <result property="page" column="page"></result>
+    </resultMap>
+
+    <!--添加警察信息-->
+    <insert id="addpoliceinformation">
+        insert into police_information (pname,pnumber,pphone,pwork,pplace,page) values (#{pname},#{pnumber},#{pphone},#{pwork},#{pplace},#{page})
+    </insert>
+    <!--查询警察信息-->
+    <select id="getallpolice" resultMap="result_policemsg">
+        select * from police_information
+    </select>
+
+    <!--查询报警信息-->
+    <select id="getpolice" resultMap="result_policemsg">
+        select * from police_information
+        <where>
+            <if test="pname != null">
+                and pname = #{pname}
+            </if>
+            <if test="pnumber != null">
+                and pnumber = #{pnumber}
+            </if>
+        </where>
+    </select>
+
+    <!--添加护士信息-->
+    <insert id="addnurseinformation">
+        insert into nurse_information (pname,pnumber,pphone,pwork,pplace,page) values (#{pname},#{pnumber},#{pphone},#{pwork},#{pplace},#{page})
+    </insert>
+    <!--查询护士信息-->
+    <select id="getallnurse" resultMap="result_policemsg">
+        select * from nurse_information
+    </select>
+
+    <!--查询护士信息-->
+    <select id="getnurse" resultMap="result_policemsg">
+        select * from nurse_information
+        <where>
+            <if test="pname != null">
+                and pname = #{pname}
+            </if>
+            <if test="pnumber != null">
+                and pnumber = #{pnumber}
+            </if>
+        </where>
+    </select>
+
+
+
+
+    <!--查询全部报警信息-->
+    <select id="selectAlarmMessage" resultMap="result_msg">
+        select * from alarm_information_table
+    </select>
+
+    <!--查询报警信息-->
+    <select id="getMessageByparameter" resultMap="result_msg">
+        select * from alarm_information_table
+        <where>
+            <if test="name != null">
+                and name = #{name}
+            </if>
+            <if test="carNumber != null">
+                and carnumber = #{carNumber}
+            </if>
+        </where>
+    </select>
+</mapper>

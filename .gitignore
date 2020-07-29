@@ -1,0 +1,4 @@
+# Project exclude paths
+/android-page/target/
+/my-server/target/
+/netty_consumer/target/

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0">
+
+    <meta
+            http-equiv="X-UA-Compatible"
+            content="ie=edge"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link rel="stylesheet">
+    <title>Title</title>
+    <script>
+        function login() {
+            var username = document.getElementById("username").value;
+            // var password = document.getElementById("password").value;
+            // 判空
+            if(username == "" || username == null){
+                window.alert("username 为空");
+            }else{
+
+                // 异步对象
+                var xhr = new XMLHttpRequest();
+
+                // 设置属性
+                xhr.open('post', 'http://tsap4j.natappfree.cc/login/testForm',true);
+
+                // 如果想要使用post提交数据,必须添加此行
+                xhr.setRequestHeader("Content-type", "application/json");
+
+
+                var passStr = 'userName=' + username;
+
+                var sendData = {userName:username};
+                // 将数据通过send方法传递
+                xhr.send(JSON.stringify(sendData));
+
+                // 发送并接受返回值
+                xhr.onreadystatechange = function () {
+                    // 这步为判断服务器是否正确响应
+                    if(xhr.readyState == 4 && xhr.status == 200 ){
+
+                        //得到返回的结果，并且解析为json
+                        var result = xhr.responseText;
+                        var jsObj = JSON.parse(xhr.responseText);
+
+
+                        var statusCode = jsObj.statusCode;
+                        if(statusCode == 0 ){
+                            //编译模板
+                            var demo_ht = Handlebars.compile($("#demo_ht").html());
+
+                            //定义一个helper 实现在index基础上从1开始
+                            Handlebars.registerHelper("myCount" , function(index){
+                                return index + 1 ;
+                            });
+
+                            //模板渲染数据
+                            var _html = demo_ht(data);
+                            //dom操作
+                            $("#demo").html(_html);
+                            student = jsObj.data;
+                            // student = jsObj.data;
+                        }else{
+                            alert(jsObj.msg)
+                            // alert("账号或者密码错误")
+                        }
+                    }
+                };
+            }
+        }
+    </script>
+</head>
+<body>
+
+
+
+<!-- <h3>学生信息表</h3> -->
+<table border="1" width="700" align="center" cellspacing="0" cellpadding="6">
+    <caption>报警记录表</caption>
+    <thead>
+    <tr align="left">
+        <th>报警姓名</th>
+        <th>手机号码</th>
+        <th>地理位置</th>
+        <th>报警时间</th>
+        <th>报警类型</th>
+    </tr>
+    </thead>
+    <tbody id="container">
+    <!--//todo 表格内容使用模板渲染 -->
+    <script type="text/javascript" src="//cdn.bootcss.com/handlebars.js/4.0.6/handlebars.js"></script>
+    <script type="text/x-handlebars-template" id="template">
+
+        {{#each this}}
+
+        <tr align="left">
+            <td>{{name}}</td>
+            <td>{{phone}}</td>
+            <td>{{place}}</td>
+            <td>{{time}}</td>
+            <td>{{type}}</td>
+        </tr>
+
+        {{/each}}
+    </script>
+    </tbody>
+</table>
+
+<script src="./js/handlebars.js"></script>
+<script>
+    var student = [
+        {name: '鲁班七号', gender: '未知', age: '20', classes: '一年级射手班', note: '智商二百五的电玩小子，biubiubiu，就是腿短！'},
+        {name: '安琪拉', gender: '女', age: '18', classes: '一年级法师班', note: '什么什么魔法书！'},
+        {name: '程咬金', gender: '男', age: '30', classes: '一年级二班', note: '爱与正义之斧，偷偷推到'},
+        {name: '阿珂', gender: '女', age: '19', classes: '三年级刺客班', note: '哪里亮了点哪里，都是我的人头！'},
+        {name: '李白', gender: '男', age: '20', classes: '一年级酒酒仙班', note: '但愿长醉不愿醒，我是来无影去无踪，帅!'},
+        {name: '森瑶', gender: '女', age: '20', classes: '皮肤班级', note: '不然梦会碎还是破！'}
+    ]
+
+    //获取需要放数据的容器
+    var container = document.querySelector('#container');
+    //也就是获取我们定义的模板的dom对象。主要是想获取里面的内容（innerHTML）
+    var templateDom = document.querySelector('#template');
+    //编译模板的里的内容
+    var template = Handlebars.compile(templateDom.innerHTML);
+    //把后台获取到的数据student渲染到页面
+    container.innerHTML = template(student);
+</script>
+
+<div class="container">
+    <form action="#" class="login-form">
+        <tr>
+            <td align="center">用户名</td>
+            <td><input type="text" id="username"/></td>
+        </tr>
+        <!--<tr>-->
+        <!--<td align="center">密&nbsp;码</td>-->
+        <!--<td><input type="password" id="password"/></td>-->
+        <!--</tr>-->
+        <tr align="center">
+            <td colspan="2">
+                <button type="submit" onclick="login()">登录</button>
+            </td>
+        </tr>
+    </form>
+</div>
+
+
+
+</body>
+</html>
